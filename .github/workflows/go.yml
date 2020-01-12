@@ -29,6 +29,6 @@ jobs:
 
     - name: Archive build artifacts
       uses: actions/upload-artifact@v1
-        with:
-          name: telly
-          path: telly
+      with:
+        name: telly
+        path: telly
