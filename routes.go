@@ -282,7 +282,7 @@ func ginrus() gin.HandlerFunc {
 	}
 }
 
-func setupSSDP(baseAddress, deviceName, deviceUUID string) error {
+func setupSSDP(baseAddress, deviceName, deviceUUID string) (*ssdp.Advertiser, error) {
 	log.Debugf("Advertising telly as %s (%s)", deviceName, deviceUUID)
 
 	adv, err := ssdp.Advertise(
@@ -293,21 +293,23 @@ func setupSSDP(baseAddress, deviceName, deviceUUID string) error {
 		1800)
 
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	go func(advertiser *ssdp.Advertiser) {
 		aliveTick := time.Tick(15 * time.Second)
 
 		for {
-			<-aliveTick
-			if err := advertiser.Alive(); err != nil {
-				log.WithError(err).Panicln("error when sending ssdp heartbeat")
+			select {
+			case <-aliveTick:
+				if err := advertiser.Alive(); err != nil {
+					log.WithError(err).Panicln("error when sending ssdp heartbeat")
+				}
 			}
 		}
 	}(adv)
 
-	return nil
+	return adv, nil
 }
 
 func split(data []byte, atEOF bool) (advance int, token []byte, spliterror error) {
