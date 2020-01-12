@@ -2,6 +2,8 @@
 
 IPTV proxy for Plex Live written in Golang
 
+![](https://github.com/chazlarson/telly/workflows/Go/badge.svg)
+
 Please refer to the [Wiki](https://github.com/tellytv/telly/wiki) for the most current documentation.
 
 The [Wiki](https://github.com/tellytv/telly/wiki) includes walkthroughs for most platforms that go into more detail than listed below:
